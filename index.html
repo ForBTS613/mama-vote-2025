@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 MAMA BTS VOTE</title>
+
+    <!-- ====================  CSS  ==================== -->
+    <style>
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: #e6f2ff; 
+            color: #333; 
+            text-align: center; 
+            padding: 20px; 
+            line-height: 1.6;
+            margin: 0;
+        }
+        .credit-top {font-size:10px;color:#888;margin-bottom:8px;font-weight:500}
+        h1 {color:#4682b4;margin:0 0 8px;font-size:24px}
+        .instructions {font-size:13.5px;color:#444;margin:15px auto 18px;max-width:360px;line-height:1.9}
+        .undo-guide {font-size:13px;color:#555;margin:0 auto 20px;max-width:360px;display:flex;align-items:center;justify-content:center;gap:6px}
+        .undo-guide .undo {background:#dc3545;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+        .container {display:flex;flex-direction:column;align-items:center;max-width:400px;margin:0 auto}
+        .candidate {background:#fff;border-radius:16px;padding:20px;box-shadow:0 5px 16px rgba(0,0,0,.09);width:100%;margin-bottom:20px;display:flex;flex-direction:column;align-items:center}
+        .candidate img {width:140px;height:140px;object-fit:cover;border-radius:18px;margin-bottom:12px;border:3px solid #e6f2ff}
+        .btn-group {display:flex;gap:8px;width:100%;justify-content:center;margin-bottom:10px}
+        button {color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:16px;font-weight:600;transition:opacity .2s}
+        button:hover {opacity:.92}
+        .vote-btn {background:#6ab8e9;padding:12px 20px;flex:1;min-width:0}
+        .undo {background:#dc3545;width:30px;height:44px;padding:0;display:flex;align-items:center;justify-content:center}
+        .counters,.global-member {display:flex;justify-content:center;gap:14px;font-size:17px;font-weight:bold;color:#2c3e50;width:100%;margin-top:8px}
+        .counter {margin:0}
+        .your-total-card {background:#f0f8ff;border:2px solid #6ab8e9;border-radius:14px;padding:16px;margin:20px auto;max-width:380px;font-weight:bold;color:#1a5276}
+        .global-member {font-size:15px;color:#555;font-weight:normal}
+        .global-card {background:linear-gradient(135deg,#a0d8f1,#6ab8e9);color:white;border-radius:16px;padding:18px;margin:25px auto;max-width:380px;box-shadow:0 6px 18px rgba(0,0,0,.12)}
+        .global-card h3 {margin:0 0 10px;font-size:17px;font-weight:600}
+        .global-counters {display:flex;justify-content:center;align-items:center;font-size:20px;font-weight:bold;gap:16px}
+        .small-note {font-size:12px;margin:8px 0 0;opacity:.9}
+        .disclaimer {font-size:13px;color:#5d6d7e;max-width:380px;margin:30px auto 10px;line-height:1.7;padding:0 10px}
+        .bcd-link {font-size:14px;margin:20px 0 10px;color:#1a5276;font-weight:500}
+        .bcd-link a {color:#6ab8e9;text-decoration:none;font-weight:bold}
+        .bcd-link a:hover {text-decoration:underline}
+        .share-btn {background:#1da1f2;font-size:14px;padding:10px 20px;margin-top:10px}
+        .credit-bottom {font-size:10px;color:#888;margin-top:20px;font-weight:500}
+    </style>
+
+    <!-- ====================  FIREBASE SDK  ==================== -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js"></script>
+</head>
+<body>
+
+    <div class="credit-top">made by BTL-7</div>
+    <h1>2025 MAMA BTS VOTE</h1>
+
+    <div class="instructions">
+        Click the button → a pre-filled tweet opens.<br>
+        Post it to count!<br>
+        Use the undo icon if you close without posting.<br>
+        Tallies update live (honor the system).<br>
+        Daily reset at midnight (your local time).
+    </div>
+
+    <div class="undo-guide">
+        <span>Didn't post? Tap</span>
+        <div class="undo">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.5 10l-3 3 3 3v-2h8a2 2 0 0 0 2-2V8h-2v4H7.5v-2z"/>
+                <path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16z"/>
+            </svg>
+        </div>
+        <span>to undo</span>
+    </div>
+
+    <div class="container">
+
+        <!-- JIN -->
+        <div class="candidate">
+            <img src="images/jin.jpg" alt="Jin">
+            <div class="btn-group">
+                <button class="vote-btn" onclick="vote('jin')">Vote for #JIN</button>
+                <button class="undo" onclick="undo('jin')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.5 10l-3 3 3 3v-2h8a2 2 0 0 0 2-2V8h-2v4H7.5v-2z"/>
+                        <path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="counters">
+                <div class="counter">Daily: <span id="jin-daily">0</span></div>
+                <div class="counter">|</div>
+                <div class="counter">Total: <span id="jin-total">0</span></div>
+            </div>
+            <div class="global-member">
+                Global Jin Votes: <strong><span id="global-jin">0</span></strong>
+            </div>
+        </div>
+
+        <!-- J-HOPE -->
+        <div class="candidate">
+            <img src="images/jhope.jpg" alt="J-Hope">
+            <div class="btn-group">
+                <button class="vote-btn" onclick="vote('jhope')">Vote for #JHOPE</button>
+                <button class="undo" onclick="undo('jhope')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.5 10l-3 3 3 3v-2h8a2 2 0 0 0 2-2V8h-2v4H7.5v-2z"/>
+                        <path d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="counters">
+                <div class="counter">Daily: <span id="jhope-daily">0</span></div>
+                <div class="counter">|</div>
+                <div class="counter">Total: <span id="jhope-total">0</span></div>
+            </div>
+            <div class="global-member">
+                Global J-Hope Votes: <strong><span id="global-jhope">0</span></strong>
+            </div>
+        </div>
+
+        <!-- YOUR TOTAL -->
+        <div class="your-total-card">
+            Your Total Votes: <strong><span id="your-total">0</span></strong> (Jin + J-Hope)
+        </div>
+
+        <!-- GLOBAL ALL -->
+        <div class="global-card">
+            <h3>Global Widget Votes (All ARMY)</h3>
+            <div class="global-counters">
+                <div>Daily: <strong><span id="global-daily">0</span></strong></div>
+                <div>|</div>
+                <div>Total: <strong><span id="global-total">0</span></strong></div>
+            </div>
+            <p class="small-note">Every click from anyone using this widget worldwide</p>
+        </div>
+
+    </div>
+
+    <div class="disclaimer">
+        <strong>Disclaimer:</strong> These tallies reflect <em>only</em> votes made through this widget — not official Twitter/X counts. 
+        If you click "Vote" but don't post the tweet, it may still be counted here. 
+        Please be honest and use the undo icon if needed — this is our small, final effort to show love on Twitter 
+        while BCD tracks the real MAMA voting. Every true vote matters. Thank you, ARMY.
+    </div>
+
+    <div class="bcd-link">
+        Vote on MNET & upload proof on <a href="https://b-cd.app/" target="_blank">BCD</a> for official tracking!
+    </div>
+
+    <button class="share-btn" onclick="shareOnX()">Share This Widget on X</button>
+
+    <div class="credit-bottom">@betterthanlove7.613 on Twitter/X</div>
+
+    <!-- ====================  JAVASCRIPT  ==================== -->
+    <script>
+        // ----> REPLACE WITH YOUR FIREBASE CONFIG <----
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // ----- INITIALISE FIREBASE -----
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let localVotes = { jin: 0, jhope: 0 };
+
+        function getToday() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+
+        function updateAll() {
+            const jinTotal = parseInt(document.getElementById('jin-total').innerText) || 0;
+            const jhopeTotal = parseInt(document.getElementById('jhope-total').innerText) || 0;
+            const jinDaily = parseInt(document.getElementById('jin-daily').innerText) || 0;
+            const jhopeDaily = parseInt(document.getElementById('jhope-daily').innerText) || 0;
+
+            document.getElementById('global-jin').innerText = jinTotal;
+            document.getElementById('global-jhope').innerText = jhopeTotal;
+            document.getElementById('global-daily').innerText = jinDaily + jhopeDaily;
+            document.getElementById('global-total').innerText = jinTotal + jhopeTotal;
+            document.getElementById('your-total').innerText = localVotes.jin + localVotes.jhope;
+        }
+
+        function loadCounters() {
+            ['jin','jhope'].forEach(c => {
+                db.ref(`votes/${c}/total`).on('value', s => {
+                    document.getElementById(`${c}-total`).innerText = s.val() || 0;
+                    updateAll();
+                });
+                db.ref(`votes/${c}/daily/${getToday()}`).on('value', s => {
+                    document.getElementById(`${c}-daily`).innerText = s.val() || 0;
+                    updateAll();
+                });
+            });
+        }
+
+        function vote(c) {
+            const txt = encodeURIComponent(`I'm voting for #${c.toUpperCase()} in #2025MAMAVOTE`);
+            window.open(`https://twitter.com/intent/tweet?text=${txt}`, '_blank');
+
+            db.ref(`votes/${c}/total`).transaction(v => (v||0)+1);
+            db.ref(`votes/${c}/daily/${getToday()}`).transaction(v => (v||0)+1);
+            localVotes[c]++;
+            updateAll();
+        }
+
+        function undo(c) {
+            db.ref(`votes/${c}/total`).transaction(v => Math.max((v||0)-1,0));
+            db.ref(`votes/${c}/daily/${getToday()}`).transaction(v => Math.max((v||0)-1,0));
+            if (localVotes[c] > 0) localVotes[c]--;
+            updateAll();
+        }
+
+        function shareOnX() {
+            const text = "Vote for #JIN or #JHOPE in #2025MAMAVOTE with our live tracker! Every vote counts — be honest & use Undo if needed. ARMY, let's go!";
+            const url = window.location.href;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        loadCounters();
+    </script>
+</body>
+  </html>
